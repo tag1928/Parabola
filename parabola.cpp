@@ -44,7 +44,7 @@ class Parabola
 		void printXIntersections()
 		{	
 			double* discriminant = new double;
-			*discriminant = pow(b, 2) - (4 * a * c);
+			*discriminant = (b * b) - (4 * a * c);
 			
 			if (*discriminant < 0)
 			{
@@ -85,8 +85,8 @@ class Screen
 {
 	private:
 		
-		static const int width = 100;
-		static const int height = 100;
+		static const int width = 150;
+		static const int height = 150;
 		
 		char plane[height][width];
 		
@@ -143,7 +143,7 @@ class Screen
 };
 
 void setGrid(Screen* scr, char gridX, char gridY)
-{
+{	
 	for (int i = 0; i < scr -> getScreenWidth(); i++)
 	{
 		scr -> setPoint(i, (scr -> getScreenHeight()) / 2, gridX);
@@ -160,6 +160,16 @@ void setGrid(Screen* scr, char gridX, char gridY)
 
 int main()
 {
+	int input;
+	
+	cout << "Type the number of an action\n";
+	cout << "1. Display a parabola\n";
+	cout << "2. Exit" << endl;
+	
+	cin >> input;
+	
+	if (input == 2) return 0;
+	
 	Screen scr;
 	
 	setGrid(&scr, '-', '|');
@@ -187,4 +197,5 @@ int main()
 	}
 	
 	scr.printScreen();
+	return main();
 }
