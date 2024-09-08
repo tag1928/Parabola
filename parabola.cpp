@@ -26,6 +26,8 @@ class Point
 		}
 };
 
+////
+
 class Parabola
 {
 	public:
@@ -81,6 +83,8 @@ class Parabola
 		}
 };
 
+////
+
 class Screen
 {
 	private:
@@ -92,8 +96,15 @@ class Screen
 		
 	public:
 		
+		//This function operates from an origin in the center of the array instead of a corner
 		void setPoint(int x, int y, char input)
 		{
+			x += width / 2;
+			y += width / 2;
+			
+			x--;
+			y--;
+			
 			plane[y][x] = input;
 		}
 		
@@ -125,7 +136,7 @@ class Screen
 			{
 				for (int x = 0; x < width; x++)
 				{
-					setPoint(x, y, ' ');
+					plane[y][x] = ' ';
 				}
 			}
 		}
@@ -136,33 +147,61 @@ class Screen
 			{
 				for (int x = 0; x < width; x++)
 				{
-					setPoint(x, y, preset);
+					plane[y][x] = preset;
 				}
 			}
 		}
 };
 
+////
+
 void setGrid(Screen* scr, char gridX, char gridY)
 {	
 	for (int i = 0; i < scr -> getScreenWidth(); i++)
 	{
-		scr -> setPoint(i, (scr -> getScreenHeight()) / 2, gridX);
+		scr -> setPoint(i + 1 - (scr->getScreenHeight() / 2) , 0, gridX);
 	}
 	
 	for (int i = 0; i < scr -> getScreenHeight(); i++)
 	{
-		scr -> setPoint((scr -> getScreenWidth()) / 2, i, gridY);
+		scr -> setPoint(0, i + 1 - (scr -> getScreenWidth() / 2), gridY);
 	}
 	
-	scr -> setPoint((scr -> getScreenWidth()) / 2, (scr -> getScreenHeight()) / 2, '+');
+	scr -> setPoint(0, 0, '+');
+	return;
+}
+
+void mapParabolaOnScreen(Parabola parab, Screen* scr)
+{
+	double parabX = (0 - scr -> getScreenWidth())/ 2;
+	double parabY;
+	parabX++;
+	
+	for (int i = 0; i < scr -> getScreenWidth(); i++)
+	{
+		parabY = parab.calculateY(parabX);
+		
+		if (parab.a > 0 and parabY < (scr -> getScreenHeight() / 2))
+		{
+			scr -> setPoint(parabX, parabY, '*');
+		}
+		
+		else if (parab.a < 0 and parabY > ((scr -> getScreenHeight() / 2) + 1))
+		{
+			scr -> setPoint(parabX, -parabY, '*');
+		}
+		
+		parabX++;
+	}
+	
 	return;
 }
 
 int main()
 {
-	int input;
+	short int input;
 	
-	cout << "Type the number of an action\n";
+	cout << "\nType the number of an action\n";
 	cout << "1. Display a parabola\n";
 	cout << "2. Exit" << endl;
 	
@@ -181,20 +220,7 @@ int main()
 	
 	Parabola parab(a, b, c);
 	
-	int parabX = 0 - ( (scr.getScreenWidth()) / 2);
-	int parabY;
-	
-	for (int i = 0; i < scr.getScreenWidth(); i++)
-	{
-		parabY = (int)parab.calculateY(parabX) + (scr.getScreenHeight() / 2);
-		
-		if (parabY < scr.getScreenHeight())
-		{
-			scr.setPoint(i, parabY, '*');
-		}
-		
-		parabX++;
-	}
+	mapParabolaOnScreen(parab, &scr);
 	
 	scr.printScreen();
 	return main();
