@@ -45,23 +45,20 @@ class Parabola
 		
 		void printXIntersections()
 		{	
-			double* discriminant = new double;
-			*discriminant = (b * b) - (4 * a * c);
+			double discriminant = (b * b) - (4 * a * c);
 			
-			if (*discriminant < 0)
+			if (discriminant < 0)
 			{
 				cout << "No x intersections." << endl;
-				delete discriminant;
 				return;
 			}
 			
 			cout << "The parabola intersects with X axis at: " <<
-			(0 - b - sqrt(*discriminant) ) / (2 * a) <<
+			(0 - b - sqrt(discriminant) ) / (2 * a) <<
 			", " <<
-			(0 - b + sqrt(*discriminant) ) / (2 * a) <<
+			(0 - b + sqrt(discriminant) ) / (2 * a) <<
 			endl;
 			
-			delete discriminant;
 			return;
 		}
 		
