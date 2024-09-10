@@ -105,11 +105,6 @@ class Screen
 			plane[y][x] = input;
 		}
 		
-		void emptyPoint(int x, int y)
-		{
-			plane[y][x] = ' ';
-		}
-		
 		void printScreen()
 		{
 			for (int y = height - 1; y >= 0; y--)
@@ -147,19 +142,6 @@ class Screen
 			return 1 - (height / 2);
 		}
 		
-		void testIndexes() // debug function use to visualize the order of elements printed
-		{
-			for (int y = 0; y < height; y++)
-			{
-				plane[y][0] = '0' + y;
-			}
-			
-			for (int x = 0; x < width; x++)
-			{
-				plane[0][x] = '0' + x;
-			}
-		}
-		
 		Screen()
 		{
 			for (int y = 0; y < height; y++)
@@ -171,7 +153,7 @@ class Screen
 			}
 		}
 		
-		Screen(char preset)
+		Screen(char preset)//This constructor will set every single element in the plane array to the char of the argument
 		{
 			for (int y = 0; y < height; y++)
 			{
@@ -187,12 +169,12 @@ class Screen
 
 void setGrid(Screen* scr, char gridX, char gridY)
 {	
-	for (int i = scr -> getNegativeXInputBound(); i <= scr -> getPositiveXInputBound(); i++)
+	for (int i = scr -> getNegativeXInputBound(); i <= scr -> getPositiveXInputBound(); i++) //This loop first draws the X axis on the screen
 	{
 		scr -> setPoint(i , 0, gridX);
 	}
 	
-	for (int i = scr -> getNegativeYInputBound(); i <= scr -> getPositiveYInputBound(); i++)
+	for (int i = scr -> getNegativeYInputBound(); i <= scr -> getPositiveYInputBound(); i++) //Does the same but for the Y axis
 	{
 		scr -> setPoint(0, i, gridY);
 	}
@@ -237,13 +219,13 @@ int main()
 	
 	if (input == 2) return 0;
 	
-	Screen scr;
-	
-	setGrid(&scr, '-', '|');
-	
-	double a, b, c;
+	////
 	
 	cout << "Enter a, b and c coefficients: " << endl;
+	
+	Screen scr;
+	setGrid(&scr, '-', '|');
+	double a, b, c;
 	
 	cin >> a >> b >> c;
 	
