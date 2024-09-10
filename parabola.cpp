@@ -86,8 +86,8 @@ class Screen
 {
 	private:
 		
-		static const int width = 150;
-		static const int height = 150;
+		static const int width = 144;
+		static const int height = 144;
 		
 		char plane[height][width];
 		
@@ -97,7 +97,7 @@ class Screen
 		void setPoint(int x, int y, char input)
 		{
 			x += width / 2;
-			y += width / 2;
+			y += height / 2;
 			
 			x--;
 			y--;
@@ -127,6 +127,39 @@ class Screen
 		int getScreenWidth(){return width;}
 		int getScreenHeight(){return height;}
 		
+		int getPositiveXInputBound()
+		{
+			return width / 2;
+		}
+		
+		int getNegativeXInputBound()
+		{
+			return 1 - (width / 2);
+		}
+		
+		int getPositiveYInputBound()
+		{
+			return height / 2;
+		}
+		
+		int getNegativeYInputBound()
+		{
+			return 1 - (height / 2);
+		}
+		
+		void testIndexes() // debug function use to visualize the order of elements printed
+		{
+			for (int y = 0; y < height; y++)
+			{
+				plane[y][0] = '0' + y;
+			}
+			
+			for (int x = 0; x < width; x++)
+			{
+				plane[0][x] = '0' + x;
+			}
+		}
+		
 		Screen()
 		{
 			for (int y = 0; y < height; y++)
@@ -154,14 +187,14 @@ class Screen
 
 void setGrid(Screen* scr, char gridX, char gridY)
 {	
-	for (int i = 0; i < scr -> getScreenWidth(); i++)
+	for (int i = scr -> getNegativeXInputBound(); i <= scr -> getPositiveXInputBound(); i++)
 	{
-		scr -> setPoint(i + 1 - (scr->getScreenHeight() / 2) , 0, gridX);
+		scr -> setPoint(i , 0, gridX);
 	}
 	
-	for (int i = 0; i < scr -> getScreenHeight(); i++)
+	for (int i = scr -> getNegativeYInputBound(); i <= scr -> getPositiveYInputBound(); i++)
 	{
-		scr -> setPoint(0, i + 1 - (scr -> getScreenWidth() / 2), gridY);
+		scr -> setPoint(0, i, gridY);
 	}
 	
 	scr -> setPoint(0, 0, '+');
@@ -170,25 +203,23 @@ void setGrid(Screen* scr, char gridX, char gridY)
 
 void mapParabolaOnScreen(Parabola parab, Screen* scr)
 {
-	double parabX = (0 - scr -> getScreenWidth())/ 2;
-	double parabY;
-	parabX++;
-	
-	for (int i = 0; i < scr -> getScreenWidth(); i++)
+	for (int i = scr -> getNegativeXInputBound(); i <= scr -> getPositiveXInputBound(); i++)
 	{
-		parabY = parab.calculateY(parabX);
-		
-		if (parab.a > 0 and parabY < (scr -> getScreenHeight() / 2))
+		if (parab.a > 0)
 		{
-			scr -> setPoint(parabX, parabY, '*');
+			if (parab.calculateY(i) <= scr -> getPositiveYInputBound())
+			{
+				scr -> setPoint(i, parab.calculateY(i), '*');
+			}
 		}
 		
-		else if (parab.a < 0 and parabY > ((scr -> getScreenHeight() / 2) + 1))
+		if (parab.a < 0)
 		{
-			scr -> setPoint(parabX, -parabY, '*');
+			if (parab.calculateY(i) >= scr -> getNegativeYInputBound())
+			{
+				scr -> setPoint(i, parab.calculateY(i), '*');
+			}
 		}
-		
-		parabX++;
 	}
 	
 	return;
@@ -213,6 +244,7 @@ int main()
 	double a, b, c;
 	
 	cout << "Enter a, b and c coefficients: " << endl;
+	
 	cin >> a >> b >> c;
 	
 	Parabola parab(a, b, c);
@@ -220,5 +252,6 @@ int main()
 	mapParabolaOnScreen(parab, &scr);
 	
 	scr.printScreen();
+	
 	return main();
 }
